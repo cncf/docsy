@@ -1,16 +1,30 @@
-<!-- Check the variable that indicates whether this is an archived doc set.
-  If yes, display a banner. -->
-  {{ if .Site.Params.archived_version }}
-  {{ $color := "primary" }}
-  {{ $latest_version := .Site.Params.url_latest_version }}
-  {{ $current_version := .Site.Params.version }}
-  <div class="pageinfo pageinfo-{{ $color }}">
-    {{ with $current_version }}<p>Version {{ . | markdownify }} of the
-      documentation is no longer actively maintained. The site that you are
-      currently viewing is an archived snapshot. 
-      {{ with $latest_version }}For up-to-date documentation, see the 
-        <a href="{{ $latest_version | safeURL }}" target="_blank">latest version</a>.</p>
-      {{ end }}
-    {{ end }}
+{{/* etcd-docsy file override */ -}}
+
+{{ if .Params.is_deprecated | or .Params.page_warning -}}
+  {{ $pageWarning := .Params.page_warning | default .Site.Params.versions.deprecation_warning -}}
+  {{ $thisFile  := .File -}}
+  {{ $thisURL   := .RelPermalink -}}
+  {{ $thisVers  := .Params.version -}}
+  {{ $thisVersName := .Params.versName | default $thisVers -}}
+  {{ $thisVersURI := printf "/%s/" $thisVers -}}
+
+  {{ $vers := .Site.Params.versions.latest -}}
+  {{ $versURI := printf "/%s/" $vers -}}
+  {{ $versPath := printf "/docs/%s/" $vers -}}
+
+  {{ $targetFile := replace $thisFile $thisVersURI $versURI -}}
+  {{ $targetURL := replace $thisURL $thisVersURI $versURI | relURL -}}
+  {{ if not (and $thisVers (fileExists $targetFile)) -}}
+    {{ $targetURL = $versPath -}}
+  {{ end -}}
+
+  {{ $color := "warning" -}}
+  <div class="alert alert-warning" role="alert">
+    <p>Version <strong>{{ $thisVersName }}</strong> of
+    {{ $pageWarning | markdownify }}
+    For the latest stable documentation, see
+    <a href="{{ $targetURL }}">
+      {{- $vers -}}
+    </a>.</p>
   </div>
 {{ end }}
