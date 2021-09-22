@@ -1,4 +1,3 @@
-{{/* etcd-docsy file override */ -}}
 {{ if or .Site.Params.gcs_engine_id .Site.Params.algolia_docsearch }}
 <input type="search" class="form-control td-search-input" placeholder="&#xf002; {{ T "ui_search" }}" aria-label="{{ T "ui_search" }}" autocomplete="off">
 {{ else if .Site.Params.offlineSearch }}
