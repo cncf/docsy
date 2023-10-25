@@ -36,6 +36,12 @@
     </ul>
   </nav>
 </div>
+
+<script>
+  $(function() {
+    $(".td-sidebar-nav__section > input").first().prop('checked', true);
+  });
+</script>
 {{ define "section-tree-nav-section" -}}
 {{ $s := .section -}}
 {{ $p := .page -}}
